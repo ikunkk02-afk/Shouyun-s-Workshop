@@ -1,0 +1,41 @@
+package com.shouyun.workshop.util;
+
+public final class ModConstants {
+	public static final double GLASS_HAMMER_TOTAL_DAMAGE = 10.0;
+	public static final double NETHERITE_HAMMER_TOTAL_DAMAGE = 12.0;
+	public static final double HAMMER_ATTACK_SPEED = 0.8;
+	public static final int NETHERITE_HAMMER_DURABILITY = 2031;
+
+	public static final double GLASS_SHARD_RADIUS = 3.0;
+	public static final float GLASS_SHARD_DAMAGE = 4.0F;
+	public static final float GLASS_SHARD_SELF_DAMAGE = 2.0F;
+	public static final int GLASS_SHARD_PARTICLES = 42;
+
+	public static final double NETHERITE_SHOCKWAVE_RADIUS = 5.5;
+	public static final float NETHERITE_SHOCKWAVE_DAMAGE = 5.0F;
+	public static final double NETHERITE_HORIZONTAL_KNOCKBACK = 1.5;
+	public static final double NETHERITE_VERTICAL_KNOCKBACK = 0.65;
+	public static final int NETHERITE_SHOCKWAVE_PARTICLES = 36;
+
+	public static final double[] WHIRLWIND_RADII = {0.0, 3.0, 4.0, 5.0};
+	public static final float[] WHIRLWIND_DAMAGE = {0.0F, 4.0F, 5.0F, 6.0F};
+	public static final int WHIRLWIND_COOLDOWN_TICKS = 30;
+	public static final int[] WHIRLWIND_RING_PARTICLES = {0, 20, 28, 36};
+	public static final float[] SWORD_QI_DAMAGE = {0.0F, 0.0F, 5.0F, 7.0F};
+	public static final double SWORD_QI_SPEED = 1.25;
+	public static final int SWORD_QI_LIFETIME_TICKS = 20;
+	public static final double SWORD_QI_MAX_DISTANCE = 25.0;
+	public static final int SWORD_QI_PARTICLES_PER_TICK = 2;
+
+	public static final int WIND_ACTIVATION_TICKS = 40;
+	public static final double WIND_STATIONARY_SPEED_SQUARED = 0.0025;
+	public static final double WIND_HORIZONTAL_SPEED = 0.35;
+	public static final double WIND_UPWARD_SPEED = 0.04;
+	public static final double WIND_VELOCITY_SMOOTHING = 0.25;
+	public static final int WIND_HUNGER_INTERVAL_TICKS = 140;
+	public static final int WIND_HUNGER_COST = 1;
+	public static final int WIND_PARTICLE_INTERVAL_TICKS = 5;
+
+	private ModConstants() {
+	}
+}

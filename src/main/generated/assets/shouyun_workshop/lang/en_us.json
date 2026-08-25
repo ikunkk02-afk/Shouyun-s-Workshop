@@ -1,0 +1,7 @@
+{
+  "enchantment.shouyun_workshop.whirlwind_slash": "Whirlwind Slash",
+  "item.shouyun_workshop.glass_hammer": "Glass Hammer",
+  "item.shouyun_workshop.netherite_hammer": "Netherite Hammer",
+  "tooltip.shouyun_workshop.glass_hammer": "Shatters on hit and scatters damaging glass shards",
+  "tooltip.shouyun_workshop.netherite_hammer": "Releases a powerful shockwave on hit"
+}

@@ -1,0 +1,38 @@
+{
+	"schemaVersion": 1,
+	"id": "shouyun_workshop",
+	"version": "${version}",
+	"name": "Shouyun's Workshop",
+	"description": "A community-driven content expansion mod featuring weapons, enchantments, blocks, and small gameplay systems.",
+	"authors": [
+		"寿云"
+	],
+	"contact": {
+		"homepage": "https://github.com/ikunkk02-afk/Shouyun-s-Workshop",
+		"sources": "https://github.com/ikunkk02-afk/Shouyun-s-Workshop",
+		"issues": "https://github.com/ikunkk02-afk/Shouyun-s-Workshop/issues"
+	},
+	"license": "MIT",
+	"icon": "assets/shouyun_workshop/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.shouyun.workshop.ShouyunWorkshop"
+		],
+		"client": [
+			"com.shouyun.workshop.client.ShouyunWorkshopClient"
+		],
+		"fabric-datagen": [
+			"com.shouyun.workshop.datagen.ShouyunWorkshopDataGenerator"
+		],
+		"fabric-gametest": [
+			"com.shouyun.workshop.gametest.ShouyunWorkshopGameTests"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
