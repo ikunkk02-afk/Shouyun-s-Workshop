@@ -20,5 +20,7 @@ public final class ModChineseLanguageProvider extends FabricLanguageProvider {
 		builder.add("enchantment.shouyun_workshop.whirlwind_slash", "旋风斩");
 		builder.add("tooltip.shouyun_workshop.glass_hammer", "命中后破碎，并向周围散射伤人的玻璃碎片");
 		builder.add("tooltip.shouyun_workshop.netherite_hammer", "命中后释放强力冲击波");
+		builder.add("key.shouyun_workshop.toggle_wind_flight", "切换御风飞行");
+		builder.add("key.categories.shouyun_workshop", "寿云工坊");
 	}
 }

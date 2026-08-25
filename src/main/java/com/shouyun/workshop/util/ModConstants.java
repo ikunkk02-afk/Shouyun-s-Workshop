@@ -27,10 +27,9 @@ public final class ModConstants {
 	public static final double SWORD_QI_MAX_DISTANCE = 25.0;
 	public static final int SWORD_QI_PARTICLES_PER_TICK = 2;
 
-	public static final int WIND_ACTIVATION_TICKS = 40;
-	public static final double WIND_STATIONARY_SPEED_SQUARED = 0.0025;
 	public static final double WIND_HORIZONTAL_SPEED = 0.35;
-	public static final double WIND_UPWARD_SPEED = 0.04;
+	public static final double WIND_HOVER_VERTICAL_SPEED = 0.0;
+	public static final double WIND_VERTICAL_SPEED = 0.22;
 	public static final double WIND_VELOCITY_SMOOTHING = 0.25;
 	public static final int WIND_HUNGER_INTERVAL_TICKS = 140;
 	public static final int WIND_HUNGER_COST = 1;

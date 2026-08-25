@@ -11,7 +11,11 @@ public record WindFlightInputPayload(byte flags) implements CustomPayload {
 	public static final int BACKWARD = 1 << 1;
 	public static final int LEFT = 1 << 2;
 	public static final int RIGHT = 1 << 3;
-	public static final int VALID_MASK = FORWARD | BACKWARD | LEFT | RIGHT;
+	public static final int TOGGLE = 1 << 4;
+	public static final int ASCEND = 1 << 5;
+	public static final int DESCEND = 1 << 6;
+	public static final int MOVEMENT_MASK = FORWARD | BACKWARD | LEFT | RIGHT | ASCEND | DESCEND;
+	public static final int VALID_MASK = MOVEMENT_MASK | TOGGLE;
 
 	public static final Id<WindFlightInputPayload> ID = new Id<>(ShouyunWorkshop.id("wind_flight_input"));
 	public static final PacketCodec<RegistryByteBuf, WindFlightInputPayload> CODEC = PacketCodec.tuple(

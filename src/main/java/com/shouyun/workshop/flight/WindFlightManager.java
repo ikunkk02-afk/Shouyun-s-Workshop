@@ -30,8 +30,29 @@ public final class WindFlightManager {
 	public static void updateInput(ServerPlayerEntity player, byte rawFlags) {
 		WindState state = STATES.get(player.getUuid());
 		if (state != null && state.active) {
-			state.inputFlags = (byte) (rawFlags & WindFlightInputPayload.VALID_MASK);
+			state.inputFlags = (byte) (rawFlags & WindFlightInputPayload.MOVEMENT_MASK);
 		}
+	}
+
+	public static void toggle(ServerPlayerEntity player) {
+		WindState current = STATES.get(player.getUuid());
+		if (current != null && current.active) {
+			exit(player);
+			return;
+		}
+		if (!canStart(player)) {
+			return;
+		}
+
+		WindState state = new WindState();
+		state.active = true;
+		state.previousNoGravity = player.hasNoGravity();
+		STATES.put(player.getUuid(), state);
+		player.setNoGravity(true);
+		Vec3d velocity = player.getVelocity();
+		player.setVelocity(velocity.x, ModConstants.WIND_HOVER_VERTICAL_SPEED, velocity.z);
+		player.velocityModified = true;
+		player.fallDistance = 0.0F;
 	}
 
 	public static boolean isFlying(ServerPlayerEntity player) {
@@ -41,39 +62,19 @@ public final class WindFlightManager {
 
 	private static void tickServer(MinecraftServer server) {
 		for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
-			tickPlayer(player);
+			WindState state = STATES.get(player.getUuid());
+			if (state != null && state.active) {
+				tickPlayer(player, state);
+			}
 		}
 	}
 
-	private static void tickPlayer(ServerPlayerEntity player) {
-		UUID uuid = player.getUuid();
-		WindState state = STATES.computeIfAbsent(uuid, ignored -> new WindState());
-		if (state.active) {
-			if (!canContinue(player)) {
-				exit(player);
-				return;
-			}
-			tickActive(player, state);
+	private static void tickPlayer(ServerPlayerEntity player, WindState state) {
+		if (!canContinue(player)) {
+			exit(player);
 			return;
 		}
-
-		if (!canCharge(player)) {
-			state.stationaryTicks = 0;
-			if (!hasWhirlwindThree(player)) {
-				STATES.remove(uuid);
-			}
-			return;
-		}
-
-		state.stationaryTicks++;
-		if (state.stationaryTicks >= ModConstants.WIND_ACTIVATION_TICKS) {
-			state.active = true;
-			state.previousNoGravity = player.hasNoGravity();
-			state.hungerTicks = 0;
-			state.inputFlags = 0;
-			player.setNoGravity(true);
-			player.fallDistance = 0.0F;
-		}
+		tickActive(player, state);
 	}
 
 	private static void tickActive(ServerPlayerEntity player, WindState state) {
@@ -89,20 +90,22 @@ public final class WindFlightManager {
 
 		double yaw = Math.toRadians(player.getYaw());
 		Vec3d forward = new Vec3d(-Math.sin(yaw), 0.0, Math.cos(yaw));
-		Vec3d right = new Vec3d(Math.cos(yaw), 0.0, Math.sin(yaw));
+		Vec3d right = new Vec3d(-Math.cos(yaw), 0.0, -Math.sin(yaw));
 		double forwardInput = flag(state.inputFlags, WindFlightInputPayload.FORWARD)
 				- flag(state.inputFlags, WindFlightInputPayload.BACKWARD);
 		double sideInput = flag(state.inputFlags, WindFlightInputPayload.RIGHT)
 				- flag(state.inputFlags, WindFlightInputPayload.LEFT);
+		double verticalInput = flag(state.inputFlags, WindFlightInputPayload.ASCEND)
+				- flag(state.inputFlags, WindFlightInputPayload.DESCEND);
 		Vec3d horizontal = forward.multiply(forwardInput).add(right.multiply(sideInput));
 		if (horizontal.lengthSquared() > 1.0) {
 			horizontal = horizontal.normalize();
 		}
 		Vec3d target = new Vec3d(horizontal.x * ModConstants.WIND_HORIZONTAL_SPEED,
-				ModConstants.WIND_UPWARD_SPEED,
+				verticalInput * ModConstants.WIND_VERTICAL_SPEED,
 				horizontal.z * ModConstants.WIND_HORIZONTAL_SPEED);
 		Vec3d smoothed = player.getVelocity().lerp(target, ModConstants.WIND_VELOCITY_SMOOTHING);
-		smoothed = new Vec3d(smoothed.x, Math.max(0.0, smoothed.y), smoothed.z);
+		smoothed = new Vec3d(smoothed.x, target.y, smoothed.z);
 		player.setVelocity(smoothed);
 		player.velocityModified = true;
 		player.fallDistance = 0.0F;
@@ -116,17 +119,14 @@ public final class WindFlightManager {
 		}
 	}
 
-	private static boolean canCharge(ServerPlayerEntity player) {
-		Vec3d velocity = player.getVelocity();
-		double horizontalSpeedSquared = velocity.x * velocity.x + velocity.z * velocity.z;
-		return hasWhirlwindThree(player)
-				&& player.isOnGround()
-				&& horizontalSpeedSquared <= ModConstants.WIND_STATIONARY_SPEED_SQUARED
+	private static boolean canStart(ServerPlayerEntity player) {
+		return hasWhirlwind(player)
+				&& player.getHungerManager().getFoodLevel() >= ModConstants.WIND_HUNGER_COST
 				&& baseStateValid(player);
 	}
 
 	private static boolean canContinue(ServerPlayerEntity player) {
-		return hasWhirlwindThree(player) && baseStateValid(player);
+		return hasWhirlwind(player) && baseStateValid(player);
 	}
 
 	private static boolean baseStateValid(ServerPlayerEntity player) {
@@ -140,10 +140,10 @@ public final class WindFlightManager {
 				&& !player.isInLava();
 	}
 
-	private static boolean hasWhirlwindThree(ServerPlayerEntity player) {
+	private static boolean hasWhirlwind(ServerPlayerEntity player) {
 		ItemStack stack = player.getMainHandStack();
 		return stack.isIn(ItemTags.SWORDS)
-				&& ModEnchantments.getWhirlwindLevel(player.getServerWorld(), stack) >= 3;
+				&& ModEnchantments.getWhirlwindLevel(player.getServerWorld(), stack) > 0;
 	}
 
 	public static void exit(ServerPlayerEntity player) {
@@ -163,7 +163,6 @@ public final class WindFlightManager {
 	}
 
 	private static final class WindState {
-		private int stationaryTicks;
 		private int hungerTicks;
 		private byte inputFlags;
 		private boolean active;

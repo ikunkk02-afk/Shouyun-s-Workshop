@@ -20,5 +20,7 @@ public final class ModEnglishLanguageProvider extends FabricLanguageProvider {
 		builder.add("enchantment.shouyun_workshop.whirlwind_slash", "Whirlwind Slash");
 		builder.add("tooltip.shouyun_workshop.glass_hammer", "Shatters on hit and scatters damaging glass shards");
 		builder.add("tooltip.shouyun_workshop.netherite_hammer", "Releases a powerful shockwave on hit");
+		builder.add("key.shouyun_workshop.toggle_wind_flight", "Toggle Wind Flight");
+		builder.add("key.categories.shouyun_workshop", "Shouyun's Workshop");
 	}
 }

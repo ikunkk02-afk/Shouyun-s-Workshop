@@ -8,7 +8,13 @@ public final class ModNetworking {
 	public static void registerServer() {
 		PayloadTypeRegistry.playC2S().register(WindFlightInputPayload.ID, WindFlightInputPayload.CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(WindFlightInputPayload.ID,
-				(payload, context) -> WindFlightManager.updateInput(context.player(), payload.flags()));
+				(payload, context) -> {
+					byte flags = (byte) (payload.flags() & WindFlightInputPayload.VALID_MASK);
+					if ((flags & WindFlightInputPayload.TOGGLE) != 0) {
+						WindFlightManager.toggle(context.player());
+					}
+					WindFlightManager.updateInput(context.player(), flags);
+				});
 	}
 
 	private ModNetworking() {

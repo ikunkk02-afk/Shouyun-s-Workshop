@@ -2,6 +2,8 @@
   "enchantment.shouyun_workshop.whirlwind_slash": "旋风斩",
   "item.shouyun_workshop.glass_hammer": "玻璃重锤",
   "item.shouyun_workshop.netherite_hammer": "下界合金重锤",
+  "key.categories.shouyun_workshop": "寿云工坊",
+  "key.shouyun_workshop.toggle_wind_flight": "切换御风飞行",
   "tooltip.shouyun_workshop.glass_hammer": "命中后破碎，并向周围散射伤人的玻璃碎片",
   "tooltip.shouyun_workshop.netherite_hammer": "命中后释放强力冲击波"
 }
