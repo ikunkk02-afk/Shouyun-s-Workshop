@@ -72,15 +72,23 @@ public final class ShouyunWorkshopGameTests implements FabricGameTest {
 		ServerPlayerEntity player = createPlayer(context, new Vec3d(2.0, 2.0, 2.0));
 		ZombieEntity primary = context.spawnMob(EntityType.ZOMBIE, new Vec3d(3.0, 2.0, 2.0));
 		ZombieEntity east = context.spawnMob(EntityType.ZOMBIE, new Vec3d(5.0, 2.0, 2.0));
+		ZombieEntity outer = context.spawnMob(EntityType.ZOMBIE, new Vec3d(7.0, 2.0, 2.0));
 		ItemStack stack = new ItemStack(ModItems.NETHERITE_HAMMER);
 		player.equipStack(EquipmentSlot.MAINHAND, stack);
+		context.setBlockState(new BlockPos(3, 2, 3), Blocks.STONE);
+		context.assertFalse(HammerHandler.isBlockDestructionEnabled(player),
+				"Hammer block destruction must be disabled by default");
+		context.assertTrue(HammerHandler.toggleBlockDestruction(player),
+				"The hammer block destruction mode must be independently toggleable");
 		Vec3d playerVelocity = player.getVelocity();
 
 		context.assertTrue(HammerHandler.tryCreateNetheriteShockwave(player, primary, stack),
 				"A confirmed hammer hit must activate its shockwave");
 
-		context.assertTrue(east.getHealth() < 15.2F && east.getHealth() > 14.8F,
-				"Shockwave target must receive one armor-adjusted damage instance");
+		context.assertTrue(east.getHealth() < 12.4F && east.getHealth() > 11.8F,
+				"A nearby target must receive the small blast bonus in one damage instance");
+		context.assertTrue(outer.getHealth() < 15.2F && outer.getHealth() > 14.8F,
+				"A target outside the small blast must receive only shockwave damage");
 		context.assertTrue(east.getVelocity().x > 0.0, "Entity east of the center must be pushed east");
 		context.assertTrue(east.getVelocity().y > 0.0, "Shockwave must launch targets upward");
 		context.assertEquals(player.getVelocity(), playerVelocity, "Shockwave must not move its owner");
@@ -96,6 +104,8 @@ public final class ShouyunWorkshopGameTests implements FabricGameTest {
 				"A successful shockwave must start the item cooldown");
 		context.assertFalse(HammerHandler.tryCreateNetheriteShockwave(player, primary, stack),
 				"The shockwave must not activate again during cooldown");
+		context.expectBlock(Blocks.AIR, new BlockPos(3, 2, 3));
+		HammerHandler.clearPlayer(player);
 		context.complete();
 	}
 

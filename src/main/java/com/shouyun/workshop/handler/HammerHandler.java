@@ -7,6 +7,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
@@ -14,15 +16,18 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 public final class HammerHandler {
+	private static final Set<UUID> BLOCK_DESTRUCTION_ENABLED = new HashSet<>();
+
 	public static void shatterGlassHammer(ServerPlayerEntity attacker, LivingEntity primaryTarget, ItemStack stack) {
 		ServerWorld world = attacker.getServerWorld();
 		Vec3d center = primaryTarget.getPos().add(0.0, primaryTarget.getHeight() * 0.5, 0.0);
@@ -59,6 +64,10 @@ public final class HammerHandler {
 		Vec3d center = primaryTarget.getPos();
 		world.playSound(null, center.x, center.y, center.z, SoundEvents.ITEM_MACE_SMASH_GROUND_HEAVY,
 				SoundCategory.PLAYERS, 1.15F, 0.85F);
+		world.playSound(null, center.x, center.y, center.z, SoundEvents.ENTITY_GENERIC_EXPLODE,
+				SoundCategory.PLAYERS, 0.8F, 1.15F);
+		world.spawnParticles(ParticleTypes.EXPLOSION, center.x, center.y + 0.4, center.z,
+				ModConstants.NETHERITE_BLAST_PARTICLES, 0.55, 0.35, 0.55, 0.02);
 		world.spawnParticles(ParticleTypes.GUST_EMITTER_SMALL, center.x, center.y + 0.15, center.z,
 				3, 0.45, 0.05, 0.45, 0.0);
 		world.spawnParticles(ParticleTypes.CLOUD, center.x, center.y + 0.15, center.z,
@@ -75,7 +84,13 @@ public final class HammerHandler {
 			if (!affected.add(entity.getId()) || !CombatTargeting.canAffect(attacker, entity)) {
 				continue;
 			}
-			entity.damage(world.getDamageSources().playerAttack(attacker), ModConstants.NETHERITE_SHOCKWAVE_DAMAGE);
+			boolean inBlast = entity.squaredDistanceTo(center)
+					<= ModConstants.NETHERITE_BLAST_RADIUS * ModConstants.NETHERITE_BLAST_RADIUS;
+			float damage = ModConstants.NETHERITE_SHOCKWAVE_DAMAGE
+					+ (inBlast ? ModConstants.NETHERITE_BLAST_BONUS_DAMAGE : 0.0F);
+			entity.damage(inBlast
+						? world.getDamageSources().explosion(attacker, attacker)
+						: world.getDamageSources().playerAttack(attacker), damage);
 
 			Vec3d horizontal = entity.getPos().subtract(center).multiply(1.0, 0.0, 1.0);
 			if (horizontal.lengthSquared() < 1.0E-6) {
@@ -94,6 +109,9 @@ public final class HammerHandler {
 					ModConstants.NETHERITE_VERTICAL_KNOCKBACK * falloff * (1.0 - resistance), 0.0);
 			entity.velocityModified = true;
 		}
+		if (isBlockDestructionEnabled(attacker)) {
+			breakBlocksAround(world, attacker, center);
+		}
 
 		attacker.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS,
 				ModConstants.NETHERITE_HAMMER_NUMB_DURATION_TICKS,
@@ -103,6 +121,46 @@ public final class HammerHandler {
 				ModConstants.NETHERITE_HAMMER_MINING_FATIGUE_AMPLIFIER));
 		attacker.getItemCooldownManager().set(stack.getItem(), ModConstants.NETHERITE_HAMMER_COOLDOWN_TICKS);
 		return true;
+	}
+
+	public static boolean toggleBlockDestruction(ServerPlayerEntity player) {
+		boolean enabled;
+		if (BLOCK_DESTRUCTION_ENABLED.remove(player.getUuid())) {
+			enabled = false;
+		} else {
+			BLOCK_DESTRUCTION_ENABLED.add(player.getUuid());
+			enabled = true;
+		}
+		player.sendMessage(Text.translatable(enabled
+				? "message.shouyun_workshop.hammer_block_blast.enabled"
+				: "message.shouyun_workshop.hammer_block_blast.disabled"), true);
+		return enabled;
+	}
+
+	public static boolean isBlockDestructionEnabled(ServerPlayerEntity player) {
+		return BLOCK_DESTRUCTION_ENABLED.contains(player.getUuid());
+	}
+
+	public static void clearPlayer(ServerPlayerEntity player) {
+		BLOCK_DESTRUCTION_ENABLED.remove(player.getUuid());
+	}
+
+	private static void breakBlocksAround(ServerWorld world, ServerPlayerEntity attacker, Vec3d center) {
+		double radius = ModConstants.NETHERITE_BLOCK_BLAST_RADIUS;
+		int blockRadius = (int) Math.ceil(radius);
+		BlockPos origin = BlockPos.ofFloored(center);
+		for (BlockPos pos : BlockPos.iterate(origin.add(-blockRadius, -blockRadius, -blockRadius),
+				origin.add(blockRadius, blockRadius, blockRadius))) {
+			if (Vec3d.ofCenter(pos).squaredDistanceTo(center) > radius * radius
+					|| !world.isInBuildLimit(pos)
+					|| !attacker.canModifyAt(world, pos)) {
+				continue;
+			}
+			var state = world.getBlockState(pos);
+			if (!state.isAir() && state.getHardness(world, pos) >= 0.0F) {
+				world.breakBlock(pos, true, attacker, 512);
+			}
+		}
 	}
 
 	private static Iterable<LivingEntity> livingEntitiesAround(ServerWorld world, Vec3d center, double radius) {

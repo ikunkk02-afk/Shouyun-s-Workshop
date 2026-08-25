@@ -33,12 +33,13 @@ Shouyun's Workshop is a Fabric content mod built from community and fan suggesti
 ### Netherite Hammer / 下界合金重锤
 
 - A durable, high-damage weapon with 2031 durability.
-- Releases a damaging shockwave on hit.
+- Releases a small controlled blast and damaging shockwave on hit.
 - Pushes nearby targets outward and upward while excluding the wielder.
+- Press `N` while holding the hammer to toggle whether its blast can break nearby blocks. Block destruction is off by default.
 - Its powerful impact cannot launch the wielder, but the recoil briefly numbs their hand.
 - Fireproof as an item and repairable with netherite ingots.
 
-耐用的高伤害重型武器。命中时释放冲击波，对周围目标造成伤害并按各自方位向外、向上击飞；强大的冲击力不会将使用者本人震飞，但反作用力会让手短暂发麻。
+耐用的高伤害重型武器。命中时产生小范围爆炸与冲击波，对周围目标造成伤害并按各自方位向外、向上击飞；强大的冲击力不会将使用者本人震飞，但反作用力会让手短暂发麻。手持重锤按 `N` 可切换是否允许爆破附近方块，默认关闭。
 
 ### Whirlwind Slash / 旋风斩
 

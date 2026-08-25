@@ -2,6 +2,8 @@ package com.shouyun.workshop.client;
 
 import com.shouyun.workshop.enchantment.ModEnchantments;
 import com.shouyun.workshop.entity.ModEntities;
+import com.shouyun.workshop.item.ModItems;
+import com.shouyun.workshop.network.HammerBlastModePayload;
 import com.shouyun.workshop.network.WindFlightInputPayload;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -23,6 +25,11 @@ public final class ShouyunWorkshopClient implements ClientModInitializer {
 			InputUtil.Type.KEYSYM,
 			GLFW.GLFW_KEY_V,
 			"key.categories.shouyun_workshop"));
+	private static final KeyBinding TOGGLE_HAMMER_BLOCK_BLAST = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+			"key.shouyun_workshop.toggle_hammer_block_blast",
+			InputUtil.Type.KEYSYM,
+			GLFW.GLFW_KEY_N,
+			"key.categories.shouyun_workshop"));
 
 	@Override
 	public void onInitializeClient() {
@@ -42,8 +49,14 @@ public final class ShouyunWorkshopClient implements ClientModInitializer {
 		});
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			boolean toggleRequested = TOGGLE_WIND_FLIGHT.wasPressed();
+			boolean blastModeRequested = TOGGLE_HAMMER_BLOCK_BLAST.wasPressed();
 			if (client.player == null || client.world == null || client.getNetworkHandler() == null) {
 				return;
+			}
+			if (blastModeRequested
+					&& client.player.getMainHandStack().isOf(ModItems.NETHERITE_HAMMER)
+					&& ClientPlayNetworking.canSend(HammerBlastModePayload.ID)) {
+				ClientPlayNetworking.send(HammerBlastModePayload.INSTANCE);
 			}
 			if (!client.player.getMainHandStack().isIn(ItemTags.SWORDS)
 					|| ModEnchantments.getWhirlwindLevel(client.world, client.player.getMainHandStack()) <= 0

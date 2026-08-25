@@ -17,6 +17,10 @@ public final class ModConstants {
 	public static final double NETHERITE_VERTICAL_KNOCKBACK = 0.65;
 	public static final double NETHERITE_MIN_KNOCKBACK_MULTIPLIER = 0.35;
 	public static final int NETHERITE_SHOCKWAVE_PARTICLES = 36;
+	public static final double NETHERITE_BLAST_RADIUS = 2.25;
+	public static final float NETHERITE_BLAST_BONUS_DAMAGE = 3.0F;
+	public static final int NETHERITE_BLAST_PARTICLES = 3;
+	public static final double NETHERITE_BLOCK_BLAST_RADIUS = 1.75;
 	public static final int NETHERITE_HAMMER_NUMB_DURATION_TICKS = 40;
 	public static final int NETHERITE_HAMMER_COOLDOWN_TICKS = 35;
 	public static final int NETHERITE_HAMMER_WEAKNESS_AMPLIFIER = 0;

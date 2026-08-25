@@ -34,7 +34,7 @@ public final class NetheriteHammerItem extends HammerItem {
 
 	@Override
 	public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType type) {
-		for (int line = 1; line <= 4; line++) {
+		for (int line = 1; line <= 5; line++) {
 			tooltip.add(Text.translatable("tooltip.shouyun_workshop.netherite_hammer." + line)
 					.formatted(Formatting.GRAY));
 		}
