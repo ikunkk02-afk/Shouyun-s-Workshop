@@ -129,7 +129,7 @@ public final class ShouyunWorkshopGameTests implements FabricGameTest {
 		});
 	}
 
-	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 260)
+	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 220)
 	public void windFlightTogglesHoversConsumesHungerAndCleansUp(TestContext context) {
 		ServerPlayerEntity player = createPlayer(context, new Vec3d(2.0, 2.0, 2.0));
 		context.setBlockState(new BlockPos(2, 1, 2), Blocks.STONE);
@@ -143,61 +143,47 @@ public final class ShouyunWorkshopGameTests implements FabricGameTest {
 		sword.addEnchantment(whirlwind, 1);
 		player.equipStack(EquipmentSlot.MAINHAND, sword);
 		player.getHungerManager().setFoodLevel(20);
-		WindFlightManager.toggle(player);
-		context.assertFalse(WindFlightManager.isCharging(player),
-				"Whirlwind I and II must not start wind flight charging");
-		sword.addEnchantment(whirlwind, 3);
 
 		context.runAtTick(45, () -> {
 			context.assertFalse(WindFlightManager.isFlying(player), "Wind flight must not activate without the toggle key");
 			WindFlightManager.toggle(player);
-			context.assertTrue(WindFlightManager.isCharging(player),
-					"Whirlwind III must begin a stationary charge before flight");
-		});
-		context.runAtTick(55, () -> {
-			player.setYaw(15.0F);
-			context.assertTrue(WindFlightManager.isCharging(player),
-					"Turning the camera must not interrupt wind flight charging");
-		});
-		context.runAtTick(86, () -> {
 			context.assertTrue(WindFlightManager.isFlying(player),
-					"Standing still for two seconds must activate wind flight");
-			player.setYaw(-90.0F);
+					"Pressing the flight key with any Whirlwind level must activate flight immediately");
 			WindFlightManager.updateInput(player,
 					(byte) (WindFlightInputPayload.FORWARD | WindFlightInputPayload.ASCEND));
 		});
-		context.runAtTick(96, () -> {
+		context.runAtTick(55, () -> {
 			context.assertTrue(player.getVelocity().x > 0.0,
 					"Forward input at yaw -90 must move the player east");
 			context.assertTrue(player.getVelocity().y > 0.0, "Jump input must make wind flight ascend");
 			WindFlightManager.updateInput(player,
 					(byte) (WindFlightInputPayload.FORWARD | WindFlightInputPayload.DESCEND));
 		});
-		context.runAtTick(101, () -> {
+		context.runAtTick(60, () -> {
 			context.assertTrue(player.getVelocity().y < 0.0, "Sneak input must make wind flight descend");
 			WindFlightManager.updateInput(player, (byte) WindFlightInputPayload.FORWARD);
 		});
-		context.runAtTick(106, () -> {
+		context.runAtTick(65, () -> {
 			context.assertTrue(Math.abs(player.getVelocity().y) < 0.001,
 					"Releasing vertical controls must make wind flight hover");
 			WindFlightManager.updateInput(player, (byte) WindFlightInputPayload.RIGHT);
 		});
-		context.runAtTick(111, () -> {
+		context.runAtTick(70, () -> {
 			context.assertTrue(player.getVelocity().z > 0.0,
 					"Right input at yaw -90 must move the player south");
 			WindFlightManager.updateInput(player, (byte) WindFlightInputPayload.LEFT);
 		});
-		context.runAtTick(116, () -> {
+		context.runAtTick(75, () -> {
 			context.assertTrue(player.getVelocity().z < 0.0,
 					"Left input at yaw -90 must move the player north");
 			WindFlightManager.updateInput(player, (byte) WindFlightInputPayload.FORWARD);
 		});
-		context.runAtTick(230, () -> {
+		context.runAtTick(190, () -> {
 			context.assertEquals(player.getHungerManager().getFoodLevel(), 19,
 					"Seven seconds of wind flight must consume one hunger point");
 			player.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
 		});
-		context.runAtTick(235, () -> {
+		context.runAtTick(195, () -> {
 			context.assertFalse(WindFlightManager.isFlying(player), "Switching items must end wind flight");
 			context.assertFalse(player.hasNoGravity(), "Ending wind flight must restore gravity");
 			context.complete();

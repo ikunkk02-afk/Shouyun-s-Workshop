@@ -36,6 +36,8 @@ public final class ShouyunWorkshopClient implements ClientModInitializer {
 			if (level > 0) {
 				lines.add(Text.translatable("tooltip.shouyun_workshop.whirlwind_slash." + Math.clamp(level, 1, 3))
 						.formatted(Formatting.GRAY));
+				lines.add(Text.translatable("tooltip.shouyun_workshop.wind_flight")
+						.formatted(Formatting.DARK_GRAY));
 			}
 		});
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {

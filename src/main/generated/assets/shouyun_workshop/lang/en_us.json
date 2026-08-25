@@ -13,5 +13,6 @@
   "tooltip.shouyun_workshop.netherite_hammer.4": "Recoil briefly numbs the wielder's hand",
   "tooltip.shouyun_workshop.whirlwind_slash.1": "Area whirlwind slash",
   "tooltip.shouyun_workshop.whirlwind_slash.2": "Larger area and launches sword qi",
-  "tooltip.shouyun_workshop.whirlwind_slash.3": "Charge while still to ride the wind"
+  "tooltip.shouyun_workshop.whirlwind_slash.3": "Maximum area with stronger sword qi",
+  "tooltip.shouyun_workshop.wind_flight": "Press V to toggle wind flight"
 }

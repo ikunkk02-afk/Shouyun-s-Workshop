@@ -27,7 +27,8 @@ public final class ModEnglishLanguageProvider extends FabricLanguageProvider {
 		builder.add("tooltip.shouyun_workshop.netherite_hammer.4", "Recoil briefly numbs the wielder's hand");
 		builder.add("tooltip.shouyun_workshop.whirlwind_slash.1", "Area whirlwind slash");
 		builder.add("tooltip.shouyun_workshop.whirlwind_slash.2", "Larger area and launches sword qi");
-		builder.add("tooltip.shouyun_workshop.whirlwind_slash.3", "Charge while still to ride the wind");
+		builder.add("tooltip.shouyun_workshop.whirlwind_slash.3", "Maximum area with stronger sword qi");
+		builder.add("tooltip.shouyun_workshop.wind_flight", "Press V to toggle wind flight");
 		builder.add("key.shouyun_workshop.toggle_wind_flight", "Toggle Wind Flight");
 		builder.add("key.categories.shouyun_workshop", "Shouyun's Workshop");
 	}

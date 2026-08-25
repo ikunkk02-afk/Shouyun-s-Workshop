@@ -27,7 +27,8 @@ public final class ModChineseLanguageProvider extends FabricLanguageProvider {
 		builder.add("tooltip.shouyun_workshop.netherite_hammer.4", "反作用力会使手短暂发麻");
 		builder.add("tooltip.shouyun_workshop.whirlwind_slash.1", "范围旋风斩");
 		builder.add("tooltip.shouyun_workshop.whirlwind_slash.2", "扩大范围并释放剑气");
-		builder.add("tooltip.shouyun_workshop.whirlwind_slash.3", "原地蓄力后可以御风飞行");
+		builder.add("tooltip.shouyun_workshop.whirlwind_slash.3", "最大范围并强化剑气");
+		builder.add("tooltip.shouyun_workshop.wind_flight", "按 V 切换御风飞行");
 		builder.add("key.shouyun_workshop.toggle_wind_flight", "切换御风飞行");
 		builder.add("key.categories.shouyun_workshop", "寿云工坊");
 	}

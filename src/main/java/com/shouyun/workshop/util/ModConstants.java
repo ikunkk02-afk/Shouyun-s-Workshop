@@ -39,8 +39,6 @@ public final class ModConstants {
 	public static final int WIND_HUNGER_INTERVAL_TICKS = 140;
 	public static final int WIND_HUNGER_COST = 1;
 	public static final int WIND_PARTICLE_INTERVAL_TICKS = 5;
-	public static final int WIND_CHARGE_TICKS = 40;
-	public static final double WIND_CHARGE_MOVEMENT_TOLERANCE = 0.2;
 
 	private ModConstants() {
 	}
