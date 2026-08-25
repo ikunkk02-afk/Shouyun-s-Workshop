@@ -15,7 +15,12 @@ public final class ModConstants {
 	public static final float NETHERITE_SHOCKWAVE_DAMAGE = 5.0F;
 	public static final double NETHERITE_HORIZONTAL_KNOCKBACK = 1.5;
 	public static final double NETHERITE_VERTICAL_KNOCKBACK = 0.65;
+	public static final double NETHERITE_MIN_KNOCKBACK_MULTIPLIER = 0.35;
 	public static final int NETHERITE_SHOCKWAVE_PARTICLES = 36;
+	public static final int NETHERITE_HAMMER_NUMB_DURATION_TICKS = 40;
+	public static final int NETHERITE_HAMMER_COOLDOWN_TICKS = 35;
+	public static final int NETHERITE_HAMMER_WEAKNESS_AMPLIFIER = 0;
+	public static final int NETHERITE_HAMMER_MINING_FATIGUE_AMPLIFIER = 0;
 
 	public static final double[] WHIRLWIND_RADII = {0.0, 3.0, 4.0, 5.0};
 	public static final float[] WHIRLWIND_DAMAGE = {0.0F, 4.0F, 5.0F, 6.0F};
@@ -34,6 +39,8 @@ public final class ModConstants {
 	public static final int WIND_HUNGER_INTERVAL_TICKS = 140;
 	public static final int WIND_HUNGER_COST = 1;
 	public static final int WIND_PARTICLE_INTERVAL_TICKS = 5;
+	public static final int WIND_CHARGE_TICKS = 40;
+	public static final double WIND_CHARGE_MOVEMENT_TOLERANCE = 0.2;
 
 	private ModConstants() {
 	}

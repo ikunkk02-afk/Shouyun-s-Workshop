@@ -29,14 +29,14 @@ public final class WindFlightManager {
 
 	public static void updateInput(ServerPlayerEntity player, byte rawFlags) {
 		WindState state = STATES.get(player.getUuid());
-		if (state != null && state.active) {
+		if (state != null) {
 			state.inputFlags = (byte) (rawFlags & WindFlightInputPayload.MOVEMENT_MASK);
 		}
 	}
 
 	public static void toggle(ServerPlayerEntity player) {
 		WindState current = STATES.get(player.getUuid());
-		if (current != null && current.active) {
+		if (current != null) {
 			exit(player);
 			return;
 		}
@@ -45,14 +45,8 @@ public final class WindFlightManager {
 		}
 
 		WindState state = new WindState();
-		state.active = true;
-		state.previousNoGravity = player.hasNoGravity();
+		state.chargeStart = player.getPos();
 		STATES.put(player.getUuid(), state);
-		player.setNoGravity(true);
-		Vec3d velocity = player.getVelocity();
-		player.setVelocity(velocity.x, ModConstants.WIND_HOVER_VERTICAL_SPEED, velocity.z);
-		player.velocityModified = true;
-		player.fallDistance = 0.0F;
 	}
 
 	public static boolean isFlying(ServerPlayerEntity player) {
@@ -60,10 +54,15 @@ public final class WindFlightManager {
 		return state != null && state.active;
 	}
 
+	public static boolean isCharging(ServerPlayerEntity player) {
+		WindState state = STATES.get(player.getUuid());
+		return state != null && !state.active;
+	}
+
 	private static void tickServer(MinecraftServer server) {
 		for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
 			WindState state = STATES.get(player.getUuid());
-			if (state != null && state.active) {
+			if (state != null) {
 				tickPlayer(player, state);
 			}
 		}
@@ -74,7 +73,32 @@ public final class WindFlightManager {
 			exit(player);
 			return;
 		}
-		tickActive(player, state);
+		if (state.active) {
+			tickActive(player, state);
+		} else {
+			tickCharge(player, state);
+		}
+	}
+
+	private static void tickCharge(ServerPlayerEntity player, WindState state) {
+		double toleranceSquared = ModConstants.WIND_CHARGE_MOVEMENT_TOLERANCE
+				* ModConstants.WIND_CHARGE_MOVEMENT_TOLERANCE;
+		if ((state.inputFlags & WindFlightInputPayload.MOVEMENT_MASK) != 0
+				|| player.getPos().squaredDistanceTo(state.chargeStart) > toleranceSquared) {
+			exit(player);
+			return;
+		}
+		if (++state.chargeTicks < ModConstants.WIND_CHARGE_TICKS) {
+			return;
+		}
+
+		state.active = true;
+		state.previousNoGravity = player.hasNoGravity();
+		player.setNoGravity(true);
+		Vec3d velocity = player.getVelocity();
+		player.setVelocity(velocity.x, ModConstants.WIND_HOVER_VERTICAL_SPEED, velocity.z);
+		player.velocityModified = true;
+		player.fallDistance = 0.0F;
 	}
 
 	private static void tickActive(ServerPlayerEntity player, WindState state) {
@@ -120,13 +144,13 @@ public final class WindFlightManager {
 	}
 
 	private static boolean canStart(ServerPlayerEntity player) {
-		return hasWhirlwind(player)
+		return hasWindFlight(player)
 				&& player.getHungerManager().getFoodLevel() >= ModConstants.WIND_HUNGER_COST
 				&& baseStateValid(player);
 	}
 
 	private static boolean canContinue(ServerPlayerEntity player) {
-		return hasWhirlwind(player) && baseStateValid(player);
+		return hasWindFlight(player) && baseStateValid(player);
 	}
 
 	private static boolean baseStateValid(ServerPlayerEntity player) {
@@ -140,15 +164,18 @@ public final class WindFlightManager {
 				&& !player.isInLava();
 	}
 
-	private static boolean hasWhirlwind(ServerPlayerEntity player) {
+	private static boolean hasWindFlight(ServerPlayerEntity player) {
 		ItemStack stack = player.getMainHandStack();
 		return stack.isIn(ItemTags.SWORDS)
-				&& ModEnchantments.getWhirlwindLevel(player.getServerWorld(), stack) > 0;
+				&& ModEnchantments.getWhirlwindLevel(player.getServerWorld(), stack) >= 3;
 	}
 
 	public static void exit(ServerPlayerEntity player) {
 		WindState state = STATES.remove(player.getUuid());
-		if (state == null || !state.active) {
+		if (state == null) {
+			return;
+		}
+		if (!state.active) {
 			return;
 		}
 		player.setNoGravity(state.previousNoGravity);
@@ -163,10 +190,12 @@ public final class WindFlightManager {
 	}
 
 	private static final class WindState {
+		private int chargeTicks;
 		private int hungerTicks;
 		private byte inputFlags;
 		private boolean active;
 		private boolean previousNoGravity;
+		private Vec3d chargeStart;
 	}
 
 	private WindFlightManager() {

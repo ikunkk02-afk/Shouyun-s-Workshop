@@ -21,7 +21,7 @@ public final class NetheriteHammerItem extends HammerItem {
 	@Override
 	public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
 		if (attacker instanceof ServerPlayerEntity player) {
-			HammerHandler.createNetheriteShockwave(player, target);
+			HammerHandler.tryCreateNetheriteShockwave(player, target, stack);
 		}
 		stack.damage(1, attacker, EquipmentSlot.MAINHAND);
 		return true;
@@ -34,6 +34,9 @@ public final class NetheriteHammerItem extends HammerItem {
 
 	@Override
 	public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType type) {
-		tooltip.add(Text.translatable("tooltip.shouyun_workshop.netherite_hammer").formatted(Formatting.GRAY));
+		for (int line = 1; line <= 4; line++) {
+			tooltip.add(Text.translatable("tooltip.shouyun_workshop.netherite_hammer." + line)
+					.formatted(Formatting.GRAY));
+		}
 	}
 }

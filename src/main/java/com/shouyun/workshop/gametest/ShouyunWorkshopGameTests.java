@@ -13,6 +13,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.item.ItemStack;
@@ -71,9 +72,12 @@ public final class ShouyunWorkshopGameTests implements FabricGameTest {
 		ServerPlayerEntity player = createPlayer(context, new Vec3d(2.0, 2.0, 2.0));
 		ZombieEntity primary = context.spawnMob(EntityType.ZOMBIE, new Vec3d(3.0, 2.0, 2.0));
 		ZombieEntity east = context.spawnMob(EntityType.ZOMBIE, new Vec3d(5.0, 2.0, 2.0));
+		ItemStack stack = new ItemStack(ModItems.NETHERITE_HAMMER);
+		player.equipStack(EquipmentSlot.MAINHAND, stack);
 		Vec3d playerVelocity = player.getVelocity();
 
-		HammerHandler.createNetheriteShockwave(player, primary);
+		context.assertTrue(HammerHandler.tryCreateNetheriteShockwave(player, primary, stack),
+				"A confirmed hammer hit must activate its shockwave");
 
 		context.assertTrue(east.getHealth() < 15.2F && east.getHealth() > 14.8F,
 				"Shockwave target must receive one armor-adjusted damage instance");
@@ -81,6 +85,17 @@ public final class ShouyunWorkshopGameTests implements FabricGameTest {
 		context.assertTrue(east.getVelocity().y > 0.0, "Shockwave must launch targets upward");
 		context.assertEquals(player.getVelocity(), playerVelocity, "Shockwave must not move its owner");
 		context.assertEquals(primary.getHealth(), 20.0F, "Primary target must not receive duplicate shockwave damage");
+		context.assertTrue(player.hasStatusEffect(StatusEffects.WEAKNESS),
+				"Shockwave recoil must give the wielder Weakness I");
+		context.assertTrue(player.hasStatusEffect(StatusEffects.MINING_FATIGUE),
+				"Shockwave recoil must give the wielder Mining Fatigue I");
+		context.assertEquals(player.getStatusEffect(StatusEffects.WEAKNESS).getDuration(),
+				ModConstants.NETHERITE_HAMMER_NUMB_DURATION_TICKS,
+				"Hammer numbness must use the configured duration");
+		context.assertTrue(player.getItemCooldownManager().isCoolingDown(stack.getItem()),
+				"A successful shockwave must start the item cooldown");
+		context.assertFalse(HammerHandler.tryCreateNetheriteShockwave(player, primary, stack),
+				"The shockwave must not activate again during cooldown");
 		context.complete();
 	}
 
@@ -114,7 +129,7 @@ public final class ShouyunWorkshopGameTests implements FabricGameTest {
 		});
 	}
 
-	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 220)
+	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 260)
 	public void windFlightTogglesHoversConsumesHungerAndCleansUp(TestContext context) {
 		ServerPlayerEntity player = createPlayer(context, new Vec3d(2.0, 2.0, 2.0));
 		context.setBlockState(new BlockPos(2, 1, 2), Blocks.STONE);
@@ -128,46 +143,61 @@ public final class ShouyunWorkshopGameTests implements FabricGameTest {
 		sword.addEnchantment(whirlwind, 1);
 		player.equipStack(EquipmentSlot.MAINHAND, sword);
 		player.getHungerManager().setFoodLevel(20);
+		WindFlightManager.toggle(player);
+		context.assertFalse(WindFlightManager.isCharging(player),
+				"Whirlwind I and II must not start wind flight charging");
+		sword.addEnchantment(whirlwind, 3);
 
 		context.runAtTick(45, () -> {
 			context.assertFalse(WindFlightManager.isFlying(player), "Wind flight must not activate without the toggle key");
 			WindFlightManager.toggle(player);
-			context.assertTrue(WindFlightManager.isFlying(player), "A whirlwind-enchanted sword must allow toggled flight");
+			context.assertTrue(WindFlightManager.isCharging(player),
+					"Whirlwind III must begin a stationary charge before flight");
+		});
+		context.runAtTick(55, () -> {
+			player.setYaw(15.0F);
+			context.assertTrue(WindFlightManager.isCharging(player),
+					"Turning the camera must not interrupt wind flight charging");
+		});
+		context.runAtTick(86, () -> {
+			context.assertTrue(WindFlightManager.isFlying(player),
+					"Standing still for two seconds must activate wind flight");
+			player.setYaw(-90.0F);
 			WindFlightManager.updateInput(player,
 					(byte) (WindFlightInputPayload.FORWARD | WindFlightInputPayload.ASCEND));
 		});
-		context.runAtTick(55, () -> {
+		context.runAtTick(96, () -> {
 			context.assertTrue(player.getVelocity().x > 0.0,
 					"Forward input at yaw -90 must move the player east");
 			context.assertTrue(player.getVelocity().y > 0.0, "Jump input must make wind flight ascend");
 			WindFlightManager.updateInput(player,
 					(byte) (WindFlightInputPayload.FORWARD | WindFlightInputPayload.DESCEND));
 		});
-		context.runAtTick(60, () -> {
+		context.runAtTick(101, () -> {
 			context.assertTrue(player.getVelocity().y < 0.0, "Sneak input must make wind flight descend");
 			WindFlightManager.updateInput(player, (byte) WindFlightInputPayload.FORWARD);
 		});
-		context.runAtTick(65, () -> {
+		context.runAtTick(106, () -> {
 			context.assertTrue(Math.abs(player.getVelocity().y) < 0.001,
 					"Releasing vertical controls must make wind flight hover");
 			WindFlightManager.updateInput(player, (byte) WindFlightInputPayload.RIGHT);
 		});
-		context.runAtTick(70, () -> {
+		context.runAtTick(111, () -> {
 			context.assertTrue(player.getVelocity().z > 0.0,
 					"Right input at yaw -90 must move the player south");
 			WindFlightManager.updateInput(player, (byte) WindFlightInputPayload.LEFT);
 		});
-		context.runAtTick(75, () -> {
+		context.runAtTick(116, () -> {
 			context.assertTrue(player.getVelocity().z < 0.0,
 					"Left input at yaw -90 must move the player north");
 			WindFlightManager.updateInput(player, (byte) WindFlightInputPayload.FORWARD);
 		});
-		context.runAtTick(190, () -> {
+		context.runAtTick(230, () -> {
 			context.assertEquals(player.getHungerManager().getFoodLevel(), 19,
 					"Seven seconds of wind flight must consume one hunger point");
 			player.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
 		});
-		context.runAtTick(195, () -> {
+		context.runAtTick(235, () -> {
 			context.assertFalse(WindFlightManager.isFlying(player), "Switching items must end wind flight");
 			context.assertFalse(player.hasNoGravity(), "Ending wind flight must restore gravity");
 			context.complete();

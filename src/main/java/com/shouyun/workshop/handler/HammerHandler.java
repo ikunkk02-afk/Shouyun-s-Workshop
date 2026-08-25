@@ -14,6 +14,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 
@@ -47,7 +49,12 @@ public final class HammerHandler {
 		stack.decrement(1);
 	}
 
-	public static void createNetheriteShockwave(ServerPlayerEntity attacker, LivingEntity primaryTarget) {
+	public static boolean tryCreateNetheriteShockwave(ServerPlayerEntity attacker, LivingEntity primaryTarget,
+			ItemStack stack) {
+		if (attacker.getItemCooldownManager().isCoolingDown(stack.getItem())) {
+			return false;
+		}
+
 		ServerWorld world = attacker.getServerWorld();
 		Vec3d center = primaryTarget.getPos();
 		world.playSound(null, center.x, center.y, center.z, SoundEvents.ITEM_MACE_SMASH_GROUND_HEAVY,
@@ -56,6 +63,10 @@ public final class HammerHandler {
 				3, 0.45, 0.05, 0.45, 0.0);
 		world.spawnParticles(ParticleTypes.CLOUD, center.x, center.y + 0.15, center.z,
 				ModConstants.NETHERITE_SHOCKWAVE_PARTICLES, 1.8, 0.2, 1.8, 0.12);
+		world.spawnParticles(ParticleTypes.SMOKE, attacker.getX(), attacker.getBodyY(0.7), attacker.getZ(),
+				6, 0.25, 0.2, 0.25, 0.02);
+		world.spawnParticles(ParticleTypes.CRIT, attacker.getX(), attacker.getBodyY(0.7), attacker.getZ(),
+				4, 0.2, 0.15, 0.2, 0.05);
 
 		Set<Integer> affected = new HashSet<>();
 		affected.add(primaryTarget.getId());
@@ -71,11 +82,27 @@ public final class HammerHandler {
 				horizontal = attacker.getRotationVec(1.0F).multiply(-1.0, 0.0, -1.0);
 			}
 			horizontal = horizontal.normalize();
-			entity.takeKnockback(ModConstants.NETHERITE_HORIZONTAL_KNOCKBACK, -horizontal.x, -horizontal.z);
+			double distance = Math.min(Math.sqrt(entity.squaredDistanceTo(center)),
+					ModConstants.NETHERITE_SHOCKWAVE_RADIUS);
+			double falloff = ModConstants.NETHERITE_MIN_KNOCKBACK_MULTIPLIER
+					+ (1.0 - ModConstants.NETHERITE_MIN_KNOCKBACK_MULTIPLIER)
+					* (1.0 - distance / ModConstants.NETHERITE_SHOCKWAVE_RADIUS);
+			entity.takeKnockback(ModConstants.NETHERITE_HORIZONTAL_KNOCKBACK * falloff,
+					-horizontal.x, -horizontal.z);
 			double resistance = Math.clamp(entity.getAttributeValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE), 0.0, 1.0);
-			entity.addVelocity(0.0, ModConstants.NETHERITE_VERTICAL_KNOCKBACK * (1.0 - resistance), 0.0);
+			entity.addVelocity(0.0,
+					ModConstants.NETHERITE_VERTICAL_KNOCKBACK * falloff * (1.0 - resistance), 0.0);
 			entity.velocityModified = true;
 		}
+
+		attacker.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS,
+				ModConstants.NETHERITE_HAMMER_NUMB_DURATION_TICKS,
+				ModConstants.NETHERITE_HAMMER_WEAKNESS_AMPLIFIER));
+		attacker.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE,
+				ModConstants.NETHERITE_HAMMER_NUMB_DURATION_TICKS,
+				ModConstants.NETHERITE_HAMMER_MINING_FATIGUE_AMPLIFIER));
+		attacker.getItemCooldownManager().set(stack.getItem(), ModConstants.NETHERITE_HAMMER_COOLDOWN_TICKS);
+		return true;
 	}
 
 	private static Iterable<LivingEntity> livingEntitiesAround(ServerWorld world, Vec3d center, double radius) {

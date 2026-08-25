@@ -35,21 +35,22 @@ Shouyun's Workshop is a Fabric content mod built from community and fan suggesti
 - A durable, high-damage weapon with 2031 durability.
 - Releases a damaging shockwave on hit.
 - Pushes nearby targets outward and upward while excluding the wielder.
+- Its powerful impact cannot launch the wielder, but the recoil briefly numbs their hand.
 - Fireproof as an item and repairable with netherite ingots.
 
-耐用的高伤害重型武器。命中时释放冲击波，对周围目标造成伤害并按各自方位向外、向上击飞；使用者不受自身冲击波影响。
+耐用的高伤害重型武器。命中时释放冲击波，对周围目标造成伤害并按各自方位向外、向上击飞；强大的冲击力不会将使用者本人震飞，但反作用力会让手短暂发麻。
 
 ### Whirlwind Slash / 旋风斩
 
 - **Level I:** Right-click a sword to strike valid targets within a three-block radius.
 - **Level II:** Expands the radius to four blocks and launches a short-lived, colliding sword-qi projectile.
 - **Level III:** Expands the radius to five blocks and strengthens sword qi.
-- **Wind Flight:** While holding a sword with Whirlwind Slash, press `V` to toggle flight. Use WASD to move horizontally, Space to rise, and Shift to descend. Releasing the vertical controls maintains altitude. Flight consumes one hunger point every seven seconds.
+- **Wind Flight:** While holding a sword with Whirlwind Slash III, stand still for about two seconds after pressing `V` to begin flight. Use WASD to move horizontally, Space to rise, and Shift to descend. Releasing the vertical controls maintains altitude. Flight consumes one hunger point every seven seconds.
 
 - **I 级：** 手持剑右键，对约 3 格内的有效目标发动范围斩击。
 - **II 级：** 范围扩大至约 4 格，并释放具有真实飞行与碰撞过程的剑气。
 - **III 级：** 范围扩大至约 5 格并强化剑气。
-- **御风飞行：** 主手持有带旋风斩的剑时，按 `V` 键切换御风。WASD 控制水平移动，空格上升，Shift 下降；松开垂直按键后保持高度。每 7 秒消耗 1 点饥饿值（半格饥饿图标）。
+- **御风飞行：** 主手持有带旋风斩 III 的剑时，按 `V` 后原地蓄力约 2 秒即可御风。WASD 控制水平移动，空格上升，Shift 下降；松开垂直按键后保持高度。每 7 秒消耗 1 点饥饿值（半格饥饿图标）。
 
 Combat effects are resolved by the server and respect normal PvP, team, pet ownership, damage, and knockback rules where applicable.
 

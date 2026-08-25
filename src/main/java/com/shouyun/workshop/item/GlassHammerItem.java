@@ -26,6 +26,9 @@ public final class GlassHammerItem extends HammerItem {
 
 	@Override
 	public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType type) {
-		tooltip.add(Text.translatable("tooltip.shouyun_workshop.glass_hammer").formatted(Formatting.GRAY));
+		for (int line = 1; line <= 3; line++) {
+			tooltip.add(Text.translatable("tooltip.shouyun_workshop.glass_hammer." + line)
+					.formatted(Formatting.GRAY));
+		}
 	}
 }

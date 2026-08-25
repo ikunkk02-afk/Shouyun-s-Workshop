@@ -4,6 +4,14 @@
   "item.shouyun_workshop.netherite_hammer": "Netherite Hammer",
   "key.categories.shouyun_workshop": "Shouyun's Workshop",
   "key.shouyun_workshop.toggle_wind_flight": "Toggle Wind Flight",
-  "tooltip.shouyun_workshop.glass_hammer": "Shatters on hit and scatters damaging glass shards",
-  "tooltip.shouyun_workshop.netherite_hammer": "Releases a powerful shockwave on hit"
+  "tooltip.shouyun_workshop.glass_hammer.1": "Powerful heavy strike",
+  "tooltip.shouyun_workshop.glass_hammer.2": "Shatters after a successful hit",
+  "tooltip.shouyun_workshop.glass_hammer.3": "Shards damage nearby creatures and the wielder",
+  "tooltip.shouyun_workshop.netherite_hammer.1": "Heavy strikes create a shockwave",
+  "tooltip.shouyun_workshop.netherite_hammer.2": "Launches nearby creatures",
+  "tooltip.shouyun_workshop.netherite_hammer.3": "Its own shockwave cannot launch the wielder",
+  "tooltip.shouyun_workshop.netherite_hammer.4": "Recoil briefly numbs the wielder's hand",
+  "tooltip.shouyun_workshop.whirlwind_slash.1": "Area whirlwind slash",
+  "tooltip.shouyun_workshop.whirlwind_slash.2": "Larger area and launches sword qi",
+  "tooltip.shouyun_workshop.whirlwind_slash.3": "Charge while still to ride the wind"
 }
