@@ -45,13 +45,11 @@ Shouyun's Workshop is a Fabric content mod built from community and fan suggesti
 
 - **Level I:** Right-click a sword to strike valid targets within a three-block radius.
 - **Level II:** Expands the radius to four blocks and launches a short-lived, colliding sword-qi projectile.
-- **Level III:** Expands the radius to five blocks and strengthens sword qi.
-- **Wind Flight:** While holding a sword with any level of Whirlwind Slash, press `V` to toggle flight immediately. Use WASD to move horizontally, Space to rise, and Shift to descend. Releasing the vertical controls maintains altitude. Flight consumes one hunger point every seven seconds.
+- **Level III:** Retains the Level II slash. While holding the sword and standing still for two seconds, take off from the same spot automatically. Use WASD to fly horizontally; descent is unavailable. Flight consumes one hunger point every seven seconds.
 
 - **I 级：** 手持剑右键，对约 3 格内的有效目标发动范围斩击。
 - **II 级：** 范围扩大至约 4 格，并释放具有真实飞行与碰撞过程的剑气。
-- **III 级：** 范围扩大至约 5 格并强化剑气。
-- **御风飞行：** 主手持有任意等级旋风斩的剑时，按 `V` 即可立即切换御风飞行。WASD 控制水平移动，空格上升，Shift 下降；松开垂直按键后保持高度。每 7 秒消耗 1 点饥饿值（半格饥饿图标）。
+- **III 级：** 保留 II 级的旋风斩与剑气。主手持剑原地静止 2 秒后自动原地起飞；WASD 控制水平方向，飞行期间无法下降。每飞行 7 秒消耗 1 点饥饿值（半格饥饿图标）。
 
 Combat effects are resolved by the server and respect normal PvP, team, pet ownership, damage, and knockback rules where applicable.
 

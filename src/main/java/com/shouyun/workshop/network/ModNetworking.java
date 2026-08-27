@@ -14,9 +14,6 @@ public final class ModNetworking {
 		ServerPlayNetworking.registerGlobalReceiver(WindFlightInputPayload.ID,
 				(payload, context) -> {
 					byte flags = (byte) (payload.flags() & WindFlightInputPayload.VALID_MASK);
-					if ((flags & WindFlightInputPayload.TOGGLE) != 0) {
-						WindFlightManager.toggle(context.player());
-					}
 					WindFlightManager.updateInput(context.player(), flags);
 				});
 		ServerPlayNetworking.registerGlobalReceiver(HammerBlastModePayload.ID, (payload, context) -> {

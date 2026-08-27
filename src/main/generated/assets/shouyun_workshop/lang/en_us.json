@@ -4,7 +4,6 @@
   "item.shouyun_workshop.netherite_hammer": "Netherite Hammer",
   "key.categories.shouyun_workshop": "Shouyun's Workshop",
   "key.shouyun_workshop.toggle_hammer_block_blast": "Toggle Hammer Block Destruction",
-  "key.shouyun_workshop.toggle_wind_flight": "Toggle Wind Flight",
   "message.shouyun_workshop.hammer_block_blast.disabled": "Hammer block destruction: OFF",
   "message.shouyun_workshop.hammer_block_blast.enabled": "Hammer block destruction: ON",
   "tooltip.shouyun_workshop.glass_hammer.1": "Powerful heavy strike",
@@ -15,8 +14,8 @@
   "tooltip.shouyun_workshop.netherite_hammer.3": "Its own shockwave cannot launch the wielder",
   "tooltip.shouyun_workshop.netherite_hammer.4": "Recoil briefly numbs the wielder's hand",
   "tooltip.shouyun_workshop.netherite_hammer.5": "Press N to toggle block destruction",
-  "tooltip.shouyun_workshop.whirlwind_slash.1": "Area whirlwind slash",
-  "tooltip.shouyun_workshop.whirlwind_slash.2": "Larger area and launches sword qi",
-  "tooltip.shouyun_workshop.whirlwind_slash.3": "Maximum area with stronger sword qi",
-  "tooltip.shouyun_workshop.wind_flight": "Press V to toggle wind flight"
+  "tooltip.shouyun_workshop.whirlwind_slash.1": "Right-click for a three-block whirlwind slash",
+  "tooltip.shouyun_workshop.whirlwind_slash.2": "Four-block range with sword qi",
+  "tooltip.shouyun_workshop.whirlwind_slash.3": "Take off after standing still for two seconds; WASD controls direction",
+  "tooltip.shouyun_workshop.wind_flight": "Cannot descend while flying; costs one hunger point every seven seconds"
 }

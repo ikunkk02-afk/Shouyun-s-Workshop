@@ -20,11 +20,6 @@ import net.minecraft.util.Formatting;
 import org.lwjgl.glfw.GLFW;
 
 public final class ShouyunWorkshopClient implements ClientModInitializer {
-	private static final KeyBinding TOGGLE_WIND_FLIGHT = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-			"key.shouyun_workshop.toggle_wind_flight",
-			InputUtil.Type.KEYSYM,
-			GLFW.GLFW_KEY_V,
-			"key.categories.shouyun_workshop"));
 	private static final KeyBinding TOGGLE_HAMMER_BLOCK_BLAST = KeyBindingHelper.registerKeyBinding(new KeyBinding(
 			"key.shouyun_workshop.toggle_hammer_block_blast",
 			InputUtil.Type.KEYSYM,
@@ -43,12 +38,13 @@ public final class ShouyunWorkshopClient implements ClientModInitializer {
 			if (level > 0) {
 				lines.add(Text.translatable("tooltip.shouyun_workshop.whirlwind_slash." + Math.clamp(level, 1, 3))
 						.formatted(Formatting.GRAY));
+			}
+			if (level >= 3) {
 				lines.add(Text.translatable("tooltip.shouyun_workshop.wind_flight")
 						.formatted(Formatting.DARK_GRAY));
 			}
 		});
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-			boolean toggleRequested = TOGGLE_WIND_FLIGHT.wasPressed();
 			boolean blastModeRequested = TOGGLE_HAMMER_BLOCK_BLAST.wasPressed();
 			if (client.player == null || client.world == null || client.getNetworkHandler() == null) {
 				return;
@@ -59,7 +55,7 @@ public final class ShouyunWorkshopClient implements ClientModInitializer {
 				ClientPlayNetworking.send(HammerBlastModePayload.INSTANCE);
 			}
 			if (!client.player.getMainHandStack().isIn(ItemTags.SWORDS)
-					|| ModEnchantments.getWhirlwindLevel(client.world, client.player.getMainHandStack()) <= 0
+					|| ModEnchantments.getWhirlwindLevel(client.world, client.player.getMainHandStack()) < 3
 					|| !ClientPlayNetworking.canSend(WindFlightInputPayload.ID)) {
 				return;
 			}
@@ -69,9 +65,6 @@ public final class ShouyunWorkshopClient implements ClientModInitializer {
 			if (client.options.backKey.isPressed()) flags |= WindFlightInputPayload.BACKWARD;
 			if (client.options.leftKey.isPressed()) flags |= WindFlightInputPayload.LEFT;
 			if (client.options.rightKey.isPressed()) flags |= WindFlightInputPayload.RIGHT;
-			if (client.options.jumpKey.isPressed()) flags |= WindFlightInputPayload.ASCEND;
-			if (client.options.sneakKey.isPressed()) flags |= WindFlightInputPayload.DESCEND;
-			if (toggleRequested) flags |= WindFlightInputPayload.TOGGLE;
 			ClientPlayNetworking.send(new WindFlightInputPayload((byte) flags));
 		});
 	}

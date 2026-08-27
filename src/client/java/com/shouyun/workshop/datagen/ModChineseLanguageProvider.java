@@ -26,11 +26,10 @@ public final class ModChineseLanguageProvider extends FabricLanguageProvider {
 		builder.add("tooltip.shouyun_workshop.netherite_hammer.3", "使用者不会被自身冲击波震飞");
 		builder.add("tooltip.shouyun_workshop.netherite_hammer.4", "反作用力会使手短暂发麻");
 		builder.add("tooltip.shouyun_workshop.netherite_hammer.5", "按 N 切换爆破方块模式");
-		builder.add("tooltip.shouyun_workshop.whirlwind_slash.1", "范围旋风斩");
-		builder.add("tooltip.shouyun_workshop.whirlwind_slash.2", "扩大范围并释放剑气");
-		builder.add("tooltip.shouyun_workshop.whirlwind_slash.3", "最大范围并强化剑气");
-		builder.add("tooltip.shouyun_workshop.wind_flight", "按 V 切换御风飞行");
-		builder.add("key.shouyun_workshop.toggle_wind_flight", "切换御风飞行");
+		builder.add("tooltip.shouyun_workshop.whirlwind_slash.1", "右键发动半径 3 格的旋风斩");
+		builder.add("tooltip.shouyun_workshop.whirlwind_slash.2", "半径扩大至 4 格，并附带剑气");
+		builder.add("tooltip.shouyun_workshop.whirlwind_slash.3", "原地静止 2 秒后起飞，WASD 控制方向");
+		builder.add("tooltip.shouyun_workshop.wind_flight", "飞行期间无法下降；每 7 秒消耗半格饱食度");
 		builder.add("key.shouyun_workshop.toggle_hammer_block_blast", "切换重锤爆破方块");
 		builder.add("message.shouyun_workshop.hammer_block_blast.enabled", "重锤爆破方块：开启");
 		builder.add("message.shouyun_workshop.hammer_block_blast.disabled", "重锤爆破方块：关闭");

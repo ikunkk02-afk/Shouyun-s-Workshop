@@ -26,20 +26,20 @@ public final class ModConstants {
 	public static final int NETHERITE_HAMMER_WEAKNESS_AMPLIFIER = 0;
 	public static final int NETHERITE_HAMMER_MINING_FATIGUE_AMPLIFIER = 0;
 
-	public static final double[] WHIRLWIND_RADII = {0.0, 3.0, 4.0, 5.0};
-	public static final float[] WHIRLWIND_DAMAGE = {0.0F, 4.0F, 5.0F, 6.0F};
+	public static final double[] WHIRLWIND_RADII = {0.0, 3.0, 4.0, 4.0};
+	public static final float[] WHIRLWIND_DAMAGE = {0.0F, 4.0F, 5.0F, 5.0F};
 	public static final int WHIRLWIND_COOLDOWN_TICKS = 30;
-	public static final int[] WHIRLWIND_RING_PARTICLES = {0, 20, 28, 36};
-	public static final float[] SWORD_QI_DAMAGE = {0.0F, 0.0F, 5.0F, 7.0F};
+	public static final int[] WHIRLWIND_RING_PARTICLES = {0, 20, 28, 28};
+	public static final float[] SWORD_QI_DAMAGE = {0.0F, 0.0F, 5.0F, 5.0F};
 	public static final double SWORD_QI_SPEED = 1.25;
 	public static final int SWORD_QI_LIFETIME_TICKS = 20;
 	public static final double SWORD_QI_MAX_DISTANCE = 25.0;
 	public static final int SWORD_QI_PARTICLES_PER_TICK = 2;
 
 	public static final double WIND_HORIZONTAL_SPEED = 0.35;
-	public static final double WIND_HOVER_VERTICAL_SPEED = 0.0;
-	public static final double WIND_VERTICAL_SPEED = 0.22;
+	public static final double WIND_TAKEOFF_VERTICAL_SPEED = 0.42;
 	public static final double WIND_VELOCITY_SMOOTHING = 0.25;
+	public static final int WIND_TAKEOFF_CHARGE_TICKS = 40;
 	public static final int WIND_HUNGER_INTERVAL_TICKS = 140;
 	public static final int WIND_HUNGER_COST = 1;
 	public static final int WIND_PARTICLE_INTERVAL_TICKS = 5;
