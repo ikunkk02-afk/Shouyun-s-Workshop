@@ -9,6 +9,16 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 
 public final class ModItems {
+	public static final java.util.Map<NecromancerTier, NecromancerStaffItem> NECROMANCER_STAVES = registerStaves();
+	private static java.util.Map<NecromancerTier, NecromancerStaffItem> registerStaves() {
+		var items = new java.util.EnumMap<NecromancerTier, NecromancerStaffItem>(NecromancerTier.class);
+		for (NecromancerTier tier : NecromancerTier.values()) {
+			Item.Settings settings = new Item.Settings().maxDamage(tier.durability);
+			if (tier == NecromancerTier.NETHERITE) settings.fireproof();
+			items.put(tier, (NecromancerStaffItem) register(tier.id(), new NecromancerStaffItem(tier, settings)));
+		}
+		return java.util.Collections.unmodifiableMap(items);
+	}
 	public static final Item GLASS_HAMMER = register("glass_hammer",
 			new GlassHammerItem(new Item.Settings()
 					.maxDamage(1)
@@ -30,6 +40,7 @@ public final class ModItems {
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(entries -> {
 			entries.add(GLASS_HAMMER);
 			entries.add(NETHERITE_HAMMER);
+			NECROMANCER_STAVES.values().forEach(entries::add);
 		});
 	}
 

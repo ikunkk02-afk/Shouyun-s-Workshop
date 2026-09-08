@@ -28,6 +28,8 @@ public final class ShouyunWorkshopClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+		EntityRendererRegistry.register(ModEntities.SUMMONED_ZOMBIE, net.minecraft.client.render.entity.ZombieEntityRenderer::new);
+		NecromancerHud.register();
 		EntityRendererRegistry.register(ModEntities.SWORD_QI, EmptyEntityRenderer::new);
 		ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> {
 			var client = net.minecraft.client.MinecraftClient.getInstance();

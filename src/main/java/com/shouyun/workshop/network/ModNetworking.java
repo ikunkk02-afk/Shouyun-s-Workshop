@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 public final class ModNetworking {
 	public static void registerServer() {
+		PayloadTypeRegistry.playS2C().register(NecromancerStatePayload.ID, NecromancerStatePayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(WindFlightInputPayload.ID, WindFlightInputPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(HammerBlastModePayload.ID, HammerBlastModePayload.CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(WindFlightInputPayload.ID,

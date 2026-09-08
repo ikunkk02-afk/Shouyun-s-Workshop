@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "shouyun_workshop:item/netherite_necromancer_staff"
+  }
+}

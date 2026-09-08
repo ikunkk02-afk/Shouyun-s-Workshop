@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "shouyun_workshop:item/wooden_necromancer_staff"
+  }
+}

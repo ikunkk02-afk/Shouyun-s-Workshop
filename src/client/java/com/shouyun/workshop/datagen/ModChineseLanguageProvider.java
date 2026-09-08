@@ -15,6 +15,7 @@ public final class ModChineseLanguageProvider extends FabricLanguageProvider {
 
 	@Override
 	public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup, TranslationBuilder builder) {
+		NecromancerTranslations.add(builder, true);
 		builder.add(ModItems.GLASS_HAMMER, "玻璃重锤");
 		builder.add(ModItems.NETHERITE_HAMMER, "下界合金重锤");
 		builder.add("enchantment.shouyun_workshop.whirlwind_slash", "旋风斩");

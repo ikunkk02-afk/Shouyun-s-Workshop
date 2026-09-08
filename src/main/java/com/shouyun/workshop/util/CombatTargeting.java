@@ -8,6 +8,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 public final class CombatTargeting {
 	public static boolean canAffect(ServerPlayerEntity attacker, LivingEntity target) {
+		if (target instanceof com.shouyun.workshop.entity.SummonedZombieEntity summon
+				&& (attacker.getUuid().equals(summon.ownerUuid())
+						|| summon.owner() != null && attacker.isTeammate(summon.owner()))) return false;
 		if (target == attacker || !target.isAlive() || !target.canTakeDamage() || target.isSpectator()) {
 			return false;
 		}

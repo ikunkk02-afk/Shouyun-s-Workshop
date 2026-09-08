@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "B": {
+      "item": "minecraft:bone"
+    },
+    "M": {
+      "tag": "minecraft:planks"
+    },
+    "R": {
+      "item": "minecraft:rotten_flesh"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "MBM",
+    " R ",
+    " S "
+  ],
+  "result": {
+    "count": 1,
+    "id": "shouyun_workshop:wooden_necromancer_staff"
+  }
+}

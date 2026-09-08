@@ -1,0 +1,13 @@
+// Limit this invocation to the new tests by selecting the entrypoint in build output only.
+// Run with: gradlew runGameTest -I scripts/necromancer-tests.init.gradle
+gradle.projectsEvaluated {
+    rootProject.tasks.named('processResources').configure {
+        outputs.upToDateWhen { false }
+        doLast {
+            def metadata = new File(destinationDir, 'fabric.mod.json')
+            def json = new groovy.json.JsonSlurper().parse(metadata)
+            json.entrypoints['fabric-gametest'] = ['com.shouyun.workshop.gametest.NecromancerGameTests']
+            metadata.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(json))
+        }
+    }
+}

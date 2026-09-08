@@ -21,6 +21,7 @@ public final class ShouyunWorkshop implements ModInitializer {
 		ModNetworking.registerServer();
 		WhirlwindHandler.register();
 		WindFlightManager.register();
+		com.shouyun.workshop.summon.NecromancerSummons.register();
 		LOGGER.info("Shouyun's Workshop initialized");
 	}
 

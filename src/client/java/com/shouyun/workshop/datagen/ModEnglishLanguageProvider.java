@@ -15,6 +15,7 @@ public final class ModEnglishLanguageProvider extends FabricLanguageProvider {
 
 	@Override
 	public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup, TranslationBuilder builder) {
+		NecromancerTranslations.add(builder, false);
 		builder.add(ModItems.GLASS_HAMMER, "Glass Hammer");
 		builder.add(ModItems.NETHERITE_HAMMER, "Netherite Hammer");
 		builder.add("enchantment.shouyun_workshop.whirlwind_slash", "Whirlwind Slash");

@@ -26,7 +26,8 @@
 			"com.shouyun.workshop.datagen.ShouyunWorkshopDataGenerator"
 		],
 		"fabric-gametest": [
-			"com.shouyun.workshop.gametest.ShouyunWorkshopGameTests"
+			"com.shouyun.workshop.gametest.ShouyunWorkshopGameTests",
+			"com.shouyun.workshop.gametest.NecromancerGameTests"
 		]
 	},
 	"depends": {
